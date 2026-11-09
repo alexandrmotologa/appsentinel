@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  appsentinel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: appsentinel
+    restart: unless-stopped
+    ports:
+      - "3456:3456"
+    volumes:
+      - ./data:/app/data
+      - ./examples/apps.config.json:/app/apps.config.json:ro
+    environment:
+      - NODE_ENV=production
+      - APPSENTINEL_CONFIG=/app/apps.config.json
+      # External API Keys (optional if using local heuristic provider)
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      # Outbound Alert Credentials
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL:-}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID:-}

@@ -1,0 +1,80 @@
+[
+  {
+    "id": "rev_pos_01",
+    "appId": "com.superstudio.battlequest",
+    "appName": "Battle Quest",
+    "platform": "ios",
+    "country": "us",
+    "author": "HeroPlayer",
+    "rating": 5,
+    "title": "Amazing graphics",
+    "content": "The new season 4 update looks gorgeous and runs smooth on iPhone 15!",
+    "version": "4.2.0",
+    "date": "2026-11-09T18:00:00.000Z"
+  },
+  {
+    "id": "rev_pos_02",
+    "appId": "com.superstudio.battlequest",
+    "appName": "Battle Quest",
+    "platform": "ios",
+    "country": "us",
+    "author": "CasualGamer",
+    "rating": 4,
+    "title": "Good game but needs more gems",
+    "content": "Fun gameplay, just wish rewards were slightly higher.",
+    "version": "4.2.0",
+    "date": "2026-11-09T18:05:00.000Z"
+  },
+  {
+    "id": "rev_crash_01",
+    "appId": "com.superstudio.battlequest",
+    "appName": "Battle Quest",
+    "platform": "ios",
+    "country": "us",
+    "author": "AngryBeast",
+    "rating": 1,
+    "title": "Crashes on launch immediately",
+    "content": "Since updating to 4.2.0, the app crashes immediately upon opening the splash screen on my iPhone 15 Pro running iOS 17.5.",
+    "version": "4.2.0",
+    "date": "2026-11-09T18:10:00.000Z"
+  },
+  {
+    "id": "rev_crash_02",
+    "appId": "com.superstudio.battlequest",
+    "appName": "Battle Quest",
+    "platform": "ios",
+    "country": "us",
+    "author": "ProPlayer99",
+    "rating": 1,
+    "title": "Instant crash after v4.2.0 update",
+    "content": "Cannot open the app at all. Worked fine on 4.1.9, now instant black screen and force close on iPhone 14 Pro.",
+    "version": "4.2.0",
+    "date": "2026-11-09T18:18:00.000Z"
+  },
+  {
+    "id": "rev_crash_03",
+    "appId": "com.superstudio.battlequest",
+    "appName": "Battle Quest",
+    "platform": "ios",
+    "country": "us",
+    "author": "Sarah_M",
+    "rating": 1,
+    "title": "Unplayable crash loop",
+    "content": "App terminates every single time I tap start. iPhone 15 on iOS 17.4. Please fix urgently!",
+    "version": "4.2.0",
+    "date": "2026-11-09T18:25:00.000Z"
+  },
+  {
+    "id": "rev_crash_04",
+    "appId": "com.superstudio.battlequest",
+    "appName": "Battle Quest",
+    "platform": "ios",
+    "country": "us",
+    "author": "MarkK",
+    "rating": 1,
+    "title": "Fatal exception on splash",
+    "content": "Crashes to home screen right after loading bar reaches 100%. Version 4.2.0 is completely broken.",
+    "version": "4.2.0",
+    "date": "2026-11-09T18:32:00.000Z"
+  }
+]
