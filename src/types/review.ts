@@ -11,6 +11,17 @@ export type IncidentCategory =
   | 'UI_GLITCH'
   | 'OTHER';
 
+export type SubsystemArea =
+  | 'NETWORK_SSL'
+  | 'STOREKIT_BILLING'
+  | 'AUTH_SESSION'
+  | 'GPU_RENDER'
+  | 'STORAGE_IO'
+  | 'PUSH_NOTIFICATIONS'
+  | 'MEMORY_LEAK'
+  | 'APP_LIFECYCLE'
+  | 'UNKNOWN';
+
 export type IncidentSeverity =
   | 'P1_CRITICAL'
   | 'P2_HIGH'
@@ -38,6 +49,8 @@ export interface RawReview {
 export interface TriageResult {
   category: IncidentCategory;
   severity: IncidentSeverity;
+  subsystem?: SubsystemArea;
+  suggestedMitigation?: string;
   deviceModel: string | null;
   osVersion: string | null;
   extractedVersion: string | null;

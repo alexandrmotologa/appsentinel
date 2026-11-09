@@ -3,7 +3,9 @@ import type { AlertsConfig } from '../../types/config.js';
 import type { IncidentCluster } from '../../types/incident.js';
 import type { IncidentStore } from '../storage/incident-store.js';
 import type { AlertChannel } from './channel.js';
+import { DiscordAlertChannel } from './discord.js';
 import { SlackAlertChannel } from './slack.js';
+import { TeamsAlertChannel } from './teams.js';
 import { TelegramAlertChannel } from './telegram.js';
 import { GenericWebhookChannel } from './webhook.js';
 
@@ -22,6 +24,12 @@ export class AlertDispatcher {
     }
     if (config?.webhook) {
       this.channels.push(new GenericWebhookChannel(config.webhook));
+    }
+    if (config?.discord) {
+      this.channels.push(new DiscordAlertChannel(config.discord));
+    }
+    if (config?.teams) {
+      this.channels.push(new TeamsAlertChannel(config.teams));
     }
   }
 

@@ -39,6 +39,14 @@ AppSentinel uses a JSON configuration file to define monitored mobile apps, aler
       "enabled": false,
       "url": "",
       "secret": ""
+    },
+    "discord": {
+      "enabled": false,
+      "webhookUrl": ""
+    },
+    "teams": {
+      "enabled": false,
+      "webhookUrl": ""
     }
   },
   "apps": [

@@ -14,6 +14,50 @@ All commands accept:
 
 ## Commands
 
+### `appsentinel search <query>`
+
+Searches the Apple App Store and Google Play Store to discover numeric iOS track IDs and Android package names, along with ratings, developer information, and categories.
+
+```bash
+# Search both stores for an application
+appsentinel search "Brawl Stars"
+
+# Search only iOS App Store in the German storefront
+appsentinel search "Spotify" --platform ios --country de
+```
+
+### `appsentinel add <platform> <appId>`
+
+Appends a new application entry to `apps.config.json` without requiring manual JSON manipulation.
+
+```bash
+# Add an iOS application by numeric ID
+appsentinel add ios 512939461 --name "Subway Surfers"
+
+# Add an Android application by package ID with multiple storefronts
+appsentinel add android com.spotify.music --name "Spotify" --countries us,gb,de
+```
+
+### `appsentinel compare <appId> <versionA> <versionB>`
+
+Compares crash rates, star ratings, and billing failures between two release versions to inform staged rollout and phased release decisions (`PROCEED`, `INVESTIGATE`, or `PAUSE_ROLLOUT`).
+
+```bash
+appsentinel compare com.superstudio.battlequest 4.1.9 4.2.0
+```
+
+### `appsentinel draft-reply <incident-id-or-text>`
+
+Generates a polite, localized developer reply template referencing the user's specific device model, operating system, and release version for store consoles (App Store Connect or Google Play Console).
+
+```bash
+# Generate German response for an incident
+appsentinel draft-reply inc_1731174981 --lang de
+
+# Generate English reply with dedicated support portal URL
+appsentinel draft-reply "Crashes on splash screen on iPhone 15 Pro" --lang en --support-url "https://help.mygame.com"
+```
+
 ### `appsentinel monitor`
 
 Runs the continuous background monitoring daemon. Polls configured store review streams on the interval defined in the configuration, processes incoming reviews, classifies negative feedback, and triggers alerts on crash spikes.

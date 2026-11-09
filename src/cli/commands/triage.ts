@@ -42,6 +42,7 @@ export async function triageCommand(
 
   TerminalFormatters.success(`Triage completed in ${elapsed}ms:\n`);
   console.log(`  Category:    ${result.category}`);
+  console.log(`  Subsystem:   ${result.subsystem || 'UNKNOWN'}`);
   console.log(`  Severity:    ${result.severity}`);
   console.log(`  Device:      ${result.deviceModel || 'Not detected'}`);
   console.log(`  OS Version:  ${result.osVersion || 'Not detected'}`);
@@ -49,5 +50,9 @@ export async function triageCommand(
   console.log(`  Sentiment:   ${result.sentimentScore}`);
   console.log(`  Actionable:  ${result.actionableBugReport ? 'Yes' : 'No'}`);
   console.log(`  Keywords:    ${result.keywords.join(', ') || 'None'}`);
-  console.log(`  Summary:     ${result.rootCauseSummary}\n`);
+  console.log(`  Summary:     ${result.rootCauseSummary}`);
+  if (result.suggestedMitigation) {
+    console.log(`  Mitigation:  ${result.suggestedMitigation}`);
+  }
+  console.log('');
 }

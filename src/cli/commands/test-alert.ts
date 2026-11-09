@@ -1,11 +1,13 @@
+import { DiscordAlertChannel } from '../../core/alerts/discord.js';
 import { SlackAlertChannel } from '../../core/alerts/slack.js';
+import { TeamsAlertChannel } from '../../core/alerts/teams.js';
 import { TelegramAlertChannel } from '../../core/alerts/telegram.js';
 import { GenericWebhookChannel } from '../../core/alerts/webhook.js';
 import type { IncidentCluster } from '../../types/incident.js';
 import { TerminalFormatters } from '../formatters.js';
 
 export async function testAlertCommand(options: {
-  channel: 'slack' | 'telegram' | 'webhook';
+  channel: 'slack' | 'telegram' | 'webhook' | 'discord' | 'teams';
   webhook?: string;
   token?: string;
   chatId?: string;
@@ -99,7 +101,33 @@ export async function testAlertCommand(options: {
     } else {
       TerminalFormatters.error(`Generic webhook alert failed: ${result.error}`);
     }
+  } else if (options.channel === 'discord') {
+    const webhookUrl = options.webhook || options.url || process.env.DISCORD_WEBHOOK_URL;
+    if (!webhookUrl) {
+      TerminalFormatters.error('Discord webhook URL missing. Pass --webhook <url> or set DISCORD_WEBHOOK_URL.');
+      return;
+    }
+    const channel = new DiscordAlertChannel({ enabled: true, webhookUrl });
+    const result = await channel.sendAlert(sampleIncident, 'new_incident');
+    if (result.success) {
+      TerminalFormatters.success(`Discord alert sent successfully in ${result.durationMs}ms.`);
+    } else {
+      TerminalFormatters.error(`Discord alert failed: ${result.error}`);
+    }
+  } else if (options.channel === 'teams') {
+    const webhookUrl = options.webhook || options.url || process.env.TEAMS_WEBHOOK_URL;
+    if (!webhookUrl) {
+      TerminalFormatters.error('Teams webhook URL missing. Pass --webhook <url> or set TEAMS_WEBHOOK_URL.');
+      return;
+    }
+    const channel = new TeamsAlertChannel({ enabled: true, webhookUrl });
+    const result = await channel.sendAlert(sampleIncident, 'new_incident');
+    if (result.success) {
+      TerminalFormatters.success(`Teams alert sent successfully in ${result.durationMs}ms.`);
+    } else {
+      TerminalFormatters.error(`Teams alert failed: ${result.error}`);
+    }
   } else {
-    TerminalFormatters.error(`Unknown channel '${options.channel}'. Use 'slack', 'telegram', or 'webhook'.`);
+    TerminalFormatters.error(`Unknown channel '${options.channel}'. Use 'slack', 'telegram', 'discord', 'teams', or 'webhook'.`);
   }
 }

@@ -1,6 +1,6 @@
-import type { IncidentCategory, IncidentSeverity, ReviewPlatform, TriagedReview } from './review.js';
+import type { IncidentCategory, IncidentSeverity, ReviewPlatform, SubsystemArea, TriagedReview } from './review.js';
 
-export type IncidentStatus = 'active' | 'cooldown' | 'resolved';
+export type IncidentStatus = 'active' | 'cooldown' | 'acknowledged' | 'resolved';
 
 export interface IncidentCluster {
   id: string;
@@ -8,10 +8,14 @@ export interface IncidentCluster {
   appName: string;
   platform: ReviewPlatform;
   category: IncidentCategory;
+  subsystem?: SubsystemArea;
+  suggestedMitigation?: string;
   appVersion: string;
   deviceModels: string[];
   osVersions: string[];
   reviewCount: number;
+  velocityMultiplier?: number;
+  detectionReason?: 'threshold_breach' | 'velocity_surge';
   firstSeenAt: string;
   lastSeenAt: string;
   severity: IncidentSeverity;
@@ -26,6 +30,8 @@ export interface IncidentRecord {
   appName: string;
   platform: ReviewPlatform;
   category: IncidentCategory;
+  subsystem?: string | null;
+  suggestedMitigation?: string | null;
   appVersion: string;
   severity: IncidentSeverity;
   reviewCount: number;

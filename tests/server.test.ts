@@ -43,7 +43,7 @@ describe('Embedded HTTP Server', () => {
     const res = await fetch(`http://127.0.0.1:${testPort}/`);
     assert.equal(res.status, 200);
     const html = await res.text();
-    assert.ok(html.includes('AppSentinel Monitor'));
-    assert.ok(html.includes('Active Incident Clusters'));
+    assert.ok(html.includes('AppSentinel Incident Console'));
+    assert.ok(html.includes('Incident Clusters'));
   });
 });

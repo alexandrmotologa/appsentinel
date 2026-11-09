@@ -9,6 +9,41 @@ export class IncidentStore {
     this.db = dbManager.getRawDb();
   }
 
+  public getIncidentById(incidentId: string): IncidentRecord | null {
+    const row = this.db
+      .prepare(`
+        SELECT id, cluster_fingerprint as clusterFingerprint, app_id as appId,
+               app_name as appName, platform, category, app_version as appVersion,
+               severity, review_count as reviewCount, status,
+               first_seen_at as firstSeenAt, last_seen_at as lastSeenAt,
+               last_alert_at as lastAlertAt, resolved_at as resolvedAt,
+               root_cause_summary as rootCauseSummary,
+               device_models_json as deviceModelsJson,
+               os_versions_json as osVersionsJson,
+               sample_reviews_json as sampleReviewsJson
+        FROM incidents
+        WHERE id = ?
+        LIMIT 1
+      `)
+      .get(incidentId) as IncidentRecord | undefined;
+
+    return row || null;
+  }
+
+  public updateIncidentStatus(incidentId: string, status: IncidentStatus): boolean {
+    const now = new Date().toISOString();
+    const resolvedAt = status === 'resolved' ? now : null;
+
+    const stmt = this.db.prepare(`
+      UPDATE incidents
+      SET status = ?, resolved_at = COALESCE(?, resolved_at), updated_at = ?
+      WHERE id = ?
+    `);
+
+    const result = stmt.run(status, resolvedAt, now, incidentId);
+    return Number(result.changes) > 0;
+  }
+
   public getActiveIncidentByFingerprint(fingerprint: string): IncidentRecord | null {
     const row = this.db
       .prepare(`

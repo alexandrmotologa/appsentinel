@@ -52,10 +52,24 @@ export const WebhookAlertConfigSchema = z.object({
 });
 export type WebhookAlertConfig = z.infer<typeof WebhookAlertConfigSchema>;
 
+export const DiscordAlertConfigSchema = z.object({
+  enabled: z.boolean().default(false),
+  webhookUrl: z.string().optional(),
+});
+export type DiscordAlertConfig = z.infer<typeof DiscordAlertConfigSchema>;
+
+export const TeamsAlertConfigSchema = z.object({
+  enabled: z.boolean().default(false),
+  webhookUrl: z.string().optional(),
+});
+export type TeamsAlertConfig = z.infer<typeof TeamsAlertConfigSchema>;
+
 export const AlertsConfigSchema = z.object({
   slack: SlackAlertConfigSchema.optional(),
   telegram: TelegramAlertConfigSchema.optional(),
   webhook: WebhookAlertConfigSchema.optional(),
+  discord: DiscordAlertConfigSchema.optional(),
+  teams: TeamsAlertConfigSchema.optional(),
 });
 
 export type AlertsConfig = z.infer<typeof AlertsConfigSchema>;

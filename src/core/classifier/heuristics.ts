@@ -20,16 +20,20 @@ export class LocalHeuristicClassifier implements ReviewClassifier {
     // 4. Identify Category
     const category = this.categorize(textLower);
 
-    // 5. Determine Severity
+    // 5. Deduce Subsystem & Actionable Mitigation
+    const subsystem = this.identifySubsystem(category, textLower);
+    const suggestedMitigation = this.suggestMitigation(subsystem, category, deviceModel, extractedVersion);
+
+    // 6. Determine Severity
     const severity = this.calculateSeverity(category, textLower, review.rating);
 
-    // 6. Keywords
+    // 7. Keywords
     const keywords = this.extractKeywords(textLower, category);
 
-    // 7. Sentiment Score
+    // 8. Sentiment Score
     const sentimentScore = this.calculateSentiment(textLower, review.rating);
 
-    // 8. Actionable Bug Report
+    // 9. Actionable Bug Report
     const actionableBugReport =
       category !== 'OTHER' &&
       (Boolean(deviceModel) ||
@@ -39,7 +43,7 @@ export class LocalHeuristicClassifier implements ReviewClassifier {
         textLower.includes('error') ||
         textLower.includes('charged'));
 
-    // 9. Root Cause Summary
+    // 10. Root Cause Summary
     const rootCauseSummary = this.summarizeRootCause(
       category,
       severity,
@@ -52,6 +56,8 @@ export class LocalHeuristicClassifier implements ReviewClassifier {
     return {
       category,
       severity,
+      subsystem,
+      suggestedMitigation,
       deviceModel,
       osVersion,
       extractedVersion,
@@ -60,6 +66,108 @@ export class LocalHeuristicClassifier implements ReviewClassifier {
       sentimentScore,
       keywords,
     };
+  }
+
+  private identifySubsystem(category: IncidentCategory, text: string): import('../../types/review.js').SubsystemArea {
+    if (
+      category === 'IN_APP_PURCHASE_FAIL' ||
+      text.includes('purchase') ||
+      text.includes('charged') ||
+      text.includes('receipt') ||
+      text.includes('storekit') ||
+      text.includes('billing')
+    ) {
+      return 'STOREKIT_BILLING';
+    }
+
+    if (
+      category === 'ACCOUNT_LOGIN' ||
+      text.includes('login') ||
+      text.includes('sign in') ||
+      text.includes('password') ||
+      text.includes('2fa') ||
+      text.includes('token')
+    ) {
+      return 'AUTH_SESSION';
+    }
+
+    if (
+      text.includes('black screen') ||
+      text.includes('shader') ||
+      text.includes('metal') ||
+      text.includes('vulkan') ||
+      text.includes('graphics') ||
+      text.includes('screen freeze')
+    ) {
+      return 'GPU_RENDER';
+    }
+
+    if (
+      category === 'NETWORK_ERROR' ||
+      text.includes('timeout') ||
+      text.includes('ssl') ||
+      text.includes('server') ||
+      text.includes('connection')
+    ) {
+      return 'NETWORK_SSL';
+    }
+
+    if (
+      text.includes('database') ||
+      text.includes('corrupted') ||
+      text.includes('save') ||
+      text.includes('storage')
+    ) {
+      return 'STORAGE_IO';
+    }
+
+    if (
+      category === 'PERFORMANCE_LAG' ||
+      text.includes('battery') ||
+      text.includes('overheat') ||
+      text.includes('memory') ||
+      text.includes('oom')
+    ) {
+      return 'MEMORY_LEAK';
+    }
+
+    if (
+      category === 'CRASH' &&
+      (text.includes('startup') || text.includes('splash') || text.includes('launch') || text.includes('immediately'))
+    ) {
+      return 'APP_LIFECYCLE';
+    }
+
+    return 'UNKNOWN';
+  }
+
+  private suggestMitigation(
+    subsystem: import('../../types/review.js').SubsystemArea,
+    category: IncidentCategory,
+    deviceModel: string | null,
+    version: string | null
+  ): string {
+    const devContext = deviceModel ? ` on ${deviceModel}` : '';
+    const verContext = version ? ` in release ${version}` : '';
+
+    switch (subsystem) {
+      case 'STOREKIT_BILLING':
+        return `Verify StoreKit 2 / Google Play Billing server-side receipt validation and active SKU products.`;
+      case 'AUTH_SESSION':
+        return `Audit token refresh rotation and OAuth backend endpoints for session validation timeouts.`;
+      case 'GPU_RENDER':
+        return `Inspect Vulkan / Metal shader compilation and graphics context lifecycle${devContext}.`;
+      case 'NETWORK_SSL':
+        return `Check API gateway status, TLS certificate expiration, and client connection timeouts.`;
+      case 'STORAGE_IO':
+        return `Verify local SQLite schema migration steps and filesystem write permissions.`;
+      case 'MEMORY_LEAK':
+        return `Profile heap allocations for unreleased bitmap textures or background task leaks${devContext}.`;
+      case 'APP_LIFECYCLE':
+        return `Audit early SDK initialization sequence in AppDelegate / Application.onCreate${verContext}.`;
+      default:
+        return `Inspect Sentry / Crashlytics stack traces for recent build${verContext}.`;
+    }
   }
 
   private extractDeviceModel(text: string): string | null {

@@ -46,7 +46,24 @@ Telegram notifications format incident data using clean markdown:
 * Bulleted list of affected device models and OS versions.
 * Review quotes and timestamps.
 
-### 3. Generic Webhook
+### 3. Discord Webhook Embeds
+
+Discord alerts format incidents into rich, color-coded embed cards:
+
+* Color-coded border: Red for `P1_CRITICAL`, Yellow for `P2_HIGH`.
+* Subsystem area tag (such as `STOREKIT_BILLING` or `GPU_RENDER`).
+* Actionable engineering mitigation advisory.
+* Device breakdown, volume numbers, and sample review blockquotes.
+
+### 4. Microsoft Teams MessageCards
+
+Teams alerts deliver structured cards for incident communication channels:
+
+* Header title with incident severity.
+* Subsystem, platform, and version facts list.
+* Actionable mitigation recommendations.
+
+### 5. Generic Webhook
 
 Generic webhooks dispatch an HTTP POST request with `Content-Type: application/json`. The payload includes:
 

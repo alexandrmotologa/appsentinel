@@ -1,9 +1,13 @@
 import { Command } from 'commander';
+import { addCommand } from './commands/add.js';
 import { checkCommand } from './commands/check.js';
+import { compareCommand } from './commands/compare.js';
 import { dbCleanCommand, dbExportCommand, dbStatsCommand } from './commands/db.js';
+import { draftReplyCommand } from './commands/draft-reply.js';
 import { monitorCommand } from './commands/monitor.js';
 import { replayCommand } from './commands/replay.js';
 import { reportCommand } from './commands/report.js';
+import { searchCommand } from './commands/search.js';
 import { serveCommand } from './commands/serve.js';
 import { testAlertCommand } from './commands/test-alert.js';
 import { triageCommand } from './commands/triage.js';
@@ -12,12 +16,55 @@ const program = new Command();
 
 program
   .name('appsentinel')
-  .description('Real-time mobile app review triage and incident alerting engine')
+  .description('Real-time mobile app review triage, incident alerting, and rollout safety engine')
   .version('1.0.0');
 
 // Global Options
 program.option('-c, --config <path>', 'Path to JSON configuration file');
 program.option('-v, --verbose', 'Enable verbose logging');
+
+// Command: search
+program
+  .command('search <query>')
+  .description('Search App Store and Google Play to discover app identifiers and metadata')
+  .option('-p, --platform <platform>', 'Store to search: ios, android, or all', 'all')
+  .option('--country <country>', 'Two-letter storefront country code', 'us')
+  .option('-l, --limit <limit>', 'Maximum search results per store', '5')
+  .action((query, options) => {
+    searchCommand(query, options);
+  });
+
+// Command: add
+program
+  .command('add <platform> <appId>')
+  .description('Add a new application to apps.config.json configuration')
+  .option('-n, --name <name>', 'Human-readable display name')
+  .option('--countries <countries>', 'Comma-separated store countries to monitor', 'us')
+  .action((platform, appId, options) => {
+    const parentOpts = program.opts();
+    addCommand(platform as 'ios' | 'android', appId, { ...parentOpts, ...options });
+  });
+
+// Command: compare
+program
+  .command('compare <appId> <versionA> <versionB>')
+  .description('Compare crash and sentiment metrics between releases for staged rollout decisions')
+  .action((appId, versionA, versionB, options) => {
+    const parentOpts = program.opts();
+    compareCommand(appId, versionA, versionB, { ...parentOpts, ...options });
+  });
+
+// Command: draft-reply
+program
+  .command('draft-reply <incident-id-or-text>')
+  .description('Generate a polite, localized customer support developer reply for store consoles')
+  .option('-l, --lang <lang>', 'Target language: en, de, es, fr, ja, pt, ro', 'en')
+  .option('--support-email <email>', 'Support contact email address')
+  .option('--support-url <url>', 'Support portal or ticket URL')
+  .action((idOrText, options) => {
+    const parentOpts = program.opts();
+    draftReplyCommand(idOrText, { ...parentOpts, ...options });
+  });
 
 // Command: monitor
 program

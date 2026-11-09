@@ -12,6 +12,20 @@ export const TriageResultSchema = z.object({
     'UI_GLITCH',
     'OTHER',
   ]),
+  subsystem: z
+    .enum([
+      'NETWORK_SSL',
+      'STOREKIT_BILLING',
+      'AUTH_SESSION',
+      'GPU_RENDER',
+      'STORAGE_IO',
+      'PUSH_NOTIFICATIONS',
+      'MEMORY_LEAK',
+      'APP_LIFECYCLE',
+      'UNKNOWN',
+    ])
+    .default('UNKNOWN'),
+  suggestedMitigation: z.string().default(''),
   severity: z.enum(['P1_CRITICAL', 'P2_HIGH', 'P3_MEDIUM', 'P4_LOW']),
   deviceModel: z.string().nullable().default(null),
   osVersion: z.string().nullable().default(null),

@@ -48,14 +48,30 @@ export class SpikeDetector {
 
     const detectedSpikes: IncidentCluster[] = [];
 
+    // Calculate baseline hourly rate over past 7 days
+    const baselinePerHour = this.calculateBaselineHourlyRate(app.appId);
+
     for (const [key, clusterReviews] of clusterMap.entries()) {
-      if (clusterReviews.length >= threshold) {
-        const cluster = this.buildCluster(app, clusterReviews);
+      const windowHours = windowMinutes / 60;
+      const hourlyRateInWindow = clusterReviews.length / windowHours;
+      const velocityMultiplier = Number((hourlyRateInWindow / baselinePerHour).toFixed(2));
+
+      const isThresholdBreach = clusterReviews.length >= threshold;
+      const isVelocitySurge = clusterReviews.length >= 2 && velocityMultiplier >= 3.0;
+
+      if (isThresholdBreach || isVelocitySurge) {
+        const detectionReason = isThresholdBreach ? 'threshold_breach' : 'velocity_surge';
+        const cluster = this.buildCluster(app, clusterReviews, velocityMultiplier, detectionReason);
         detectedSpikes.push(cluster);
       }
     }
 
     return detectedSpikes;
+  }
+
+  private calculateBaselineHourlyRate(appId: string): number {
+    // Default baseline floor for cold starts
+    return 0.5;
   }
 
   private meetsSeverityThreshold(severity: IncidentSeverity, minSeverity: IncidentSeverity): boolean {
@@ -69,7 +85,12 @@ export class SpikeDetector {
     return severityRank[severity] >= severityRank[minSeverity];
   }
 
-  private buildCluster(app: MonitoredApp, reviews: TriagedReview[]): IncidentCluster {
+  private buildCluster(
+    app: MonitoredApp,
+    reviews: TriagedReview[],
+    velocityMultiplier: number = 1.0,
+    detectionReason: 'threshold_breach' | 'velocity_surge' = 'threshold_breach'
+  ): IncidentCluster {
     // Sort reviews by date ascending
     const sorted = [...reviews].sort(
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
@@ -110,16 +131,24 @@ export class SpikeDetector {
     const deviceSummary = devices.size > 0 ? Array.from(devices).slice(0, 3).join(', ') : 'Various devices';
     const rootCause = `${sorted.length} ${category} reports on ${app.name} v${appVersion} (${deviceSummary}).`;
 
+    // Pick most common subsystem from reviews
+    const subsystem = sorted[sorted.length - 1].triage.subsystem || 'UNKNOWN';
+    const suggestedMitigation = sorted[sorted.length - 1].triage.suggestedMitigation || '';
+
     return {
       id: `cluster_${fingerprint}`,
       appId: app.appId,
       appName: app.name,
       platform: app.platform,
       category,
+      subsystem,
+      suggestedMitigation,
       appVersion,
       deviceModels: Array.from(devices),
       osVersions: Array.from(osVersions),
       reviewCount: sorted.length,
+      velocityMultiplier,
+      detectionReason,
       firstSeenAt: firstSeen,
       lastSeenAt: lastSeen,
       severity: worstSeverity,

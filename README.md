@@ -9,12 +9,14 @@ When mobile releases introduce critical bugs, users leave low-star reviews long 
 ## Key Capabilities
 
 * Multi-store ingestion: Polls Apple App Store customer review RSS feeds and Google Play review streams across multiple regional storefronts.
+* Store discovery CLI: Quickly search App Store and Google Play (`appsentinel search`) to discover numeric IDs and package names, then add them with a single command (`appsentinel add`).
 * Intelligent triage: Routes reviews with 1 or 2 stars to structured LLM classification (Claude Haiku, GPT-4o-mini, Gemini Flash, or local heuristics) while skipping positive reviews to keep token costs minimal.
-* Hardware and context extraction: Extracts device model, operating system version, app release version, incident category, and concise root-cause summaries.
-* Anomaly and spike detection: Uses sliding time windows to track crash velocity. Triggers incident notifications when failure thresholds are met.
-* Alert deduplication and cooldown: Suppresses duplicate notifications for ongoing incidents to prevent alert fatigue.
-* Multi-channel alerting: Delivers formatted alert cards to Slack channels, Telegram groups, and generic webhook endpoints.
-* Embedded health and metrics: Includes a local HTTP endpoint for health checks, incident feeds, and Prometheus metrics.
+* Hardware, subsystem, and mitigation context: Extracts device models, OS versions, release numbers, affected technical subsystems (such as `STOREKIT_BILLING`, `GPU_RENDER`, or `AUTH_SESSION`), and concrete mitigation advice for on-call engineers.
+* Anomaly and spike detection: Uses sliding time windows and velocity calculations to track crash spikes and trigger alerts.
+* Staged rollout comparator: Compares reliability metrics between releases (`appsentinel compare`) to guide `PROCEED` or `PAUSE_ROLLOUT` decisions during phased releases.
+* Localized developer replies: Generates polite, localized reply drafts (`appsentinel draft-reply`) referencing user hardware and operating systems for store consoles.
+* Multi-channel alerting: Delivers formatted alert cards to Slack channels, Telegram groups, Discord servers, Microsoft Teams channels, and generic webhook endpoints.
+* Embedded health and interactive console: Includes a local HTTP dashboard with incident Acknowledge and Resolve actions, review streams, device breakdown charts, health checks, and Prometheus metrics.
 
 ## Architecture
 
@@ -132,13 +134,18 @@ npm run start -- serve --port 3456
 
 ## CLI Reference
 
+* `appsentinel search <query>`: Discovers numeric iOS IDs and Android package names across global app stores.
+* `appsentinel add <platform> <appId>`: Adds a monitored application entry directly into `apps.config.json`.
+* `appsentinel compare <appId> <v1> <v2>`: Compares crash and sentiment metrics to advise phased rollout pauses.
+* `appsentinel draft-reply <incident-id>`: Generates localized customer support responses for store consoles.
 * `appsentinel monitor`: Runs continuous background polling with scheduled intervals.
 * `appsentinel check`: Executes a one-time ingestion, triage, and detection cycle.
-* `appsentinel triage <text>`: Classifies arbitrary text using configured LLM or local classifier.
-* `appsentinel test-alert`: Sends a sample incident card to Slack, Telegram, or custom webhooks.
+* `appsentinel triage <text>`: Classifies arbitrary text with hardware, subsystem, and mitigation extraction.
+* `appsentinel test-alert`: Sends a sample incident card to Slack, Telegram, Discord, Teams, or custom webhooks.
 * `appsentinel report`: Generates markdown, JSON, or HTML incident summaries from SQLite history.
 * `appsentinel replay`: Runs sliding window anomaly detection against historical review datasets.
 * `appsentinel serve`: Starts the HTTP dashboard, health checks (`/healthz`), and Prometheus metrics (`/metrics`).
+* `appsentinel db`: Database maintenance, review cleanup, and JSON/CSV export commands.
 
 ## License
 

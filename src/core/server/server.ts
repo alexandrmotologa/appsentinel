@@ -63,6 +63,65 @@ export class EmbeddedServer {
             return;
           }
 
+          // Incident Status Update Handlers
+          if (pathname.startsWith('/api/incidents/') && req.method === 'POST') {
+            const parts = pathname.split('/');
+            const incidentId = parts[3];
+            const action = parts[4]; // 'acknowledge' | 'resolve'
+
+            if (incidentId && (action === 'acknowledge' || action === 'resolve')) {
+              const newStatus = action === 'acknowledge' ? 'acknowledged' : 'resolved';
+              const updated = this.incidentStore.updateIncidentStatus(incidentId, newStatus);
+              if (updated) {
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true, incidentId, status: newStatus }));
+              } else {
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: `Incident ${incidentId} not found` }));
+              }
+              return;
+            }
+          }
+
+          if (pathname === '/api/reviews') {
+            const limit = parseInt(url.searchParams.get('limit') || '50', 10);
+            const ratingParam = url.searchParams.get('rating');
+            const platformParam = url.searchParams.get('platform');
+
+            let sql = `
+              SELECT r.id, r.external_id, r.app_id, r.app_name, r.platform,
+                     r.country, r.rating, r.title, r.content, r.version,
+                     r.review_date, r.status,
+                     t.category, t.severity, t.device_model, t.os_version,
+                     t.root_cause_summary
+              FROM reviews r
+              LEFT JOIN triaged_reviews t ON t.review_id = r.id
+            `;
+            const conditions: string[] = [];
+            const params: (string | number)[] = [];
+
+            if (ratingParam) {
+              conditions.push('r.rating = ?');
+              params.push(parseInt(ratingParam, 10));
+            }
+            if (platformParam) {
+              conditions.push('r.platform = ?');
+              params.push(platformParam);
+            }
+
+            if (conditions.length > 0) {
+              sql += ' WHERE ' + conditions.join(' AND ');
+            }
+
+            sql += ' ORDER BY r.review_date DESC LIMIT ?';
+            params.push(limit);
+
+            const reviews = this.dbManager.getRawDb().prepare(sql).all(...params);
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(reviews, null, 2));
+            return;
+          }
+
           if (pathname === '/api/stats') {
             const stats = this.dbManager.getStats();
             res.writeHead(200, { 'Content-Type': 'application/json' });
