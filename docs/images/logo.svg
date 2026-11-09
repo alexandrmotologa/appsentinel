@@ -1,0 +1,197 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <clipPath id="squircle-clip">
+      <rect x="24" y="24" width="976" height="976" rx="220" />
+    </clipPath>
+
+    <!-- Electric Cyan Gradients -->
+    <linearGradient id="cyan-glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f5ff"/>
+      <stop offset="60%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+
+    <radialGradient id="pupil-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="40%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </radialGradient>
+
+    <!-- Amber Beak Gradient -->
+    <linearGradient id="beak-lit" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+
+    <linearGradient id="beak-shadow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#92400e"/>
+    </linearGradient>
+
+    <!-- Chest Core Gradient -->
+    <linearGradient id="chest-core" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00f5ff" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#0284c7" stop-opacity="0.3"/>
+    </linearGradient>
+
+    <filter id="subtle-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#0b0f19" flood-opacity="0.16" />
+    </filter>
+  </defs>
+
+  <!-- Luxury White Squircle Container -->
+  <rect x="24" y="24" width="976" height="976" rx="220" fill="#ffffff" stroke="#e2e8f0" stroke-width="6" />
+
+  <g clip-path="url(#squircle-clip)">
+    <g transform="translate(512, 512)" filter="url(#subtle-shadow)">
+
+      <!-- Hexagonal Architectural Gateway Frame -->
+      <polygon points="
+        0,-390
+        338,-195
+        338,195
+        0,390
+        -338,195
+        -338,-195
+      " fill="none" stroke="#0f172a" stroke-width="36" stroke-linejoin="round" />
+
+      <polygon points="
+        0,-355
+        307,-177
+        307,177
+        0,355
+        -307,177
+        -307,-177
+      " fill="none" stroke="#00f5ff" stroke-width="4" opacity="0.35" stroke-dasharray="16, 12" />
+
+      <!-- 100% Watertight Solid Base Silhouette (Zero-Leak Rule) -->
+      <path d="
+        M 0,-150
+        L -60,-190
+        L -180,-310
+        L -190,-190
+        L -250,-100
+        L -275,10
+        L -250,120
+        L -200,200
+        L -130,270
+        L 0,335
+        L 130,270
+        L 200,200
+        L 250,120
+        L 275,10
+        L 250,-100
+        L 190,-190
+        L 180,-310
+        L 60,-190
+        Z
+      " fill="#080d1a" />
+
+      <!-- ================= EAR TUFTS / HORNS ================= -->
+      <!-- Left Ear Horn -->
+      <polygon points="-60,-190 -180,-310 -190,-190 -120,-150" fill="#0f172a" />
+      <polygon points="-60,-190 -120,-150 0,-150" fill="#1e293b" />
+      <polygon points="-180,-310 -190,-190 -150,-180" fill="#090d16" />
+
+      <!-- Right Ear Horn (Volumetric Highlights) -->
+      <polygon points="60,-190 180,-310 190,-190 120,-150" fill="#1e293b" />
+      <polygon points="60,-190 120,-150 0,-150" fill="#334155" />
+      <polygon points="180,-310 190,-190 150,-180" fill="#1e293b" />
+
+      <!-- ================= FOREHEAD & CROWN ================= -->
+      <!-- Center Forehead Diamond -->
+      <polygon points="0,-150 -60,-105 0,-60" fill="#334155" />
+      <polygon points="0,-150 60,-105 0,-60" fill="#475569" />
+      <polygon points="0,-150 -120,-150 -60,-105" fill="#1e293b" />
+      <polygon points="0,-150 120,-150 60,-105" fill="#334155" />
+
+      <!-- Brow Wings (Aggressive Predator Slant) -->
+      <polygon points="-60,-105 0,-60 -50,-20 -130,-75" fill="#1e293b" />
+      <polygon points="60,-105 0,-60 50,-20 130,-75" fill="#334155" />
+      <polygon points="-120,-150 -60,-105 -130,-75 -170,-115" fill="#0f172a" />
+      <polygon points="120,-150 60,-105 130,-75 170,-115" fill="#1e293b" />
+
+      <!-- ================= FACIAL DISCS & CHEEKS ================= -->
+      <!-- Outer Upper Cheeks -->
+      <polygon points="-190,-190 -250,-100 -185,-50 -170,-115" fill="#0f172a" />
+      <polygon points="190,-190 250,-100 185,-50 170,-115" fill="#1e293b" />
+
+      <!-- Outer Mid Cheeks (Radar Flare) -->
+      <polygon points="-250,-100 -275,10 -195,30 -185,-50" fill="#1e293b" />
+      <polygon points="250,-100 275,10 195,30 185,-50" fill="#334155" />
+
+      <!-- Lower Cheeks -->
+      <polygon points="-275,10 -250,120 -170,105 -195,30" fill="#0f172a" />
+      <polygon points="275,10 250,120 170,105 195,30" fill="#1e293b" />
+
+      <!-- Inner Facial Plate Around Eyes -->
+      <polygon points="-170,-115 -130,-75 -185,-50" fill="#111827" />
+      <polygon points="170,-115 130,-75 185,-50" fill="#1f2937" />
+
+      <!-- ================= PREDATOR OPTICS (ALMOND EYES) ================= -->
+      <!-- Left Eye Dark Socket -->
+      <polygon points="-185,-50 -130,-75 -50,-20 -110,-10 -170,-15" fill="#050912" />
+      <!-- Left Eye Glowing Sclera / Iris -->
+      <polygon points="-165,-45 -125,-68 -58,-22 -110,-16" fill="url(#cyan-glow)" stroke="#00f5ff" stroke-width="2" stroke-linejoin="round" />
+      <!-- Left Slit Pupil & Core Glint -->
+      <polygon points="-118,-62 -108,-63 -106,-22 -116,-21" fill="#040b17" />
+      <circle cx="-95" cy="-44" r="5" fill="url(#pupil-glow)" />
+
+      <!-- Right Eye Dark Socket -->
+      <polygon points="185,-50 130,-75 50,-20 110,-10 170,-15" fill="#0b111e" />
+      <!-- Right Eye Glowing Sclera / Iris -->
+      <polygon points="165,-45 125,-68 58,-22 110,-16" fill="url(#cyan-glow)" stroke="#00f5ff" stroke-width="2" stroke-linejoin="round" />
+      <!-- Right Slit Pupil & Core Glint -->
+      <polygon points="118,-62 108,-63 106,-22 116,-21" fill="#040b17" />
+      <circle cx="95" cy="-44" r="5" fill="url(#pupil-glow)" />
+
+      <!-- ================= HOOKED RAPTOR BEAK ================= -->
+      <!-- Nasal Bridge Keel -->
+      <polygon points="0,-60 -30,-20 0,-5" fill="#334155" />
+      <polygon points="0,-60 30,-20 0,-5" fill="#475569" />
+
+      <!-- Sharp Beak -->
+      <polygon points="0,-5 -28,-15 -20,60 0,95" fill="url(#beak-shadow)" />
+      <polygon points="0,-5 28,-15 20,60 0,95" fill="url(#beak-lit)" />
+      <!-- Hooked Tip Under-Shadow -->
+      <polygon points="-14,60 0,95 14,60 0,72" fill="#78350f" />
+
+      <!-- Muzzle Feather Facets Surrounding Beak -->
+      <polygon points="-30,-20 -110,-10 -140,45 -20,60" fill="#1e293b" />
+      <polygon points="30,-20 110,-10 140,45 20,60" fill="#334155" />
+
+      <polygon points="-140,45 -195,30 -170,105 0,105 -20,60" fill="#162032" />
+      <polygon points="140,45 195,30 170,105 0,105 20,60" fill="#24334a" />
+
+      <!-- ================= SENTINEL BREASTPLATE CHEVRONS ================= -->
+      <!-- Chest Collar / Gorget Plate -->
+      <polygon points="0,105 -170,105 -125,175 -50,150" fill="#223046" />
+      <polygon points="0,105 170,105 125,175 50,150" fill="#3b4d66" />
+
+      <!-- Lateral Shoulder Plates -->
+      <polygon points="-250,120 -200,200 -135,215 -125,175 -170,105" fill="#111827" />
+      <polygon points="250,120 200,200 135,215 125,175 170,105" fill="#1f2937" />
+
+      <!-- Central Radar Sensor Jewel (Telemetry Matrix) -->
+      <polygon points="0,115 -42,150 0,188 42,150" fill="#071220" stroke="#00f5ff" stroke-width="2.5" />
+      <polygon points="0,128 -28,150 0,174 28,150" fill="url(#chest-core)" />
+      <circle cx="0" cy="150" r="4" fill="#ffffff" />
+
+      <!-- Mid Chest Chevron Plate -->
+      <polygon points="0,188 -50,150 -125,175 -65,245 0,235" fill="#182334" />
+      <polygon points="0,188 50,150 125,175 65,245 0,235" fill="#2c3b50" />
+
+      <!-- Lower Flank Plates -->
+      <polygon points="-200,200 -130,270 -65,245 -135,215" fill="#0f172a" />
+      <polygon points="200,200 130,270 65,245 135,215" fill="#1e293b" />
+
+      <!-- Lower Apex Chevron (Shield Keel) -->
+      <polygon points="0,235 -65,245 -130,270 0,335" fill="#101827" />
+      <polygon points="0,235 65,245 130,270 0,335" fill="#1f2d42" />
+
+      <!-- Central Seam & Sensor Spine -->
+      <line x1="0" y1="115" x2="0" y2="335" stroke="#00f5ff" stroke-width="1.5" opacity="0.5" />
+    </g>
+  </g>
+</svg>

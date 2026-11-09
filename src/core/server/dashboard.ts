@@ -138,34 +138,36 @@ export class DashboardRenderer {
   <style>
     * { box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #080d1a; color: #f1f5f9; margin: 0; padding: 24px; }
+    .container { max-width: 1320px; margin: 0 auto; }
     .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; padding-bottom: 16px; margin-bottom: 24px; }
-    .title-area h1 { margin: 0; font-size: 22px; font-weight: 700; color: #f8fafc; }
+    .title-area h1 { margin: 0; font-size: 22px; font-weight: 700; color: #f8fafc; letter-spacing: -0.02em; }
     .title-area p { margin: 4px 0 0; font-size: 13px; color: #64748b; }
-    .status-badge { display: flex; align-items: center; gap: 8px; background: #102a1b; color: #4ade80; border: 1px solid #166534; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+    .status-badge { display: flex; align-items: center; gap: 8px; background: #102a1b; color: #4ade80; border: 1px solid #166534; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; white-space: nowrap; }
     .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px #4ade80; }
     .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
     .card { background: #111827; border: 1px solid #1f2937; border-radius: 8px; padding: 16px; }
     .card-val { font-size: 28px; font-weight: 700; color: #38bdf8; }
     .card-label { font-size: 12px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
-    .nav-tabs { display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid #1f2937; padding-bottom: 8px; }
-    .tab-btn { background: transparent; border: none; color: #94a3b8; font-size: 14px; font-weight: 600; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+    .nav-tabs { display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid #1f2937; padding-bottom: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .tab-btn { background: transparent; border: none; color: #94a3b8; font-size: 14px; font-weight: 600; padding: 8px 16px; border-radius: 6px; cursor: pointer; white-space: nowrap; transition: background 0.15s, color 0.15s; }
+    .tab-btn:hover { color: #f8fafc; }
     .tab-btn.active { background: #1f2937; color: #38bdf8; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
-    .table-container { background: #111827; border: 1px solid #1f2937; border-radius: 8px; overflow: hidden; }
-    table { width: 100%; border-collapse: collapse; }
+    .table-container { background: #111827; border: 1px solid #1f2937; border-radius: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; min-width: 780px; }
     th, td { padding: 12px 14px; text-align: left; font-size: 13px; border-bottom: 1px solid #1f2937; }
     th { background: #0b1120; color: #94a3b8; font-weight: 600; }
     tr:last-child td { border-bottom: none; }
     code { background: #1f2937; padding: 2px 6px; border-radius: 4px; font-size: 12px; color: #e2e8f0; }
-    .badge { padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+    .badge { padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; display: inline-block; }
     .badge-critical { background: #7f1d1d; color: #fca5a5; border: 1px solid #991b1b; }
     .badge-high { background: #78350f; color: #fde68a; border: 1px solid #92400e; }
     .badge-active { background: #1e3a8a; color: #93c5fd; }
     .badge-ack { background: #3730a3; color: #c7d2fe; }
     .badge-resolved { background: #14532d; color: #86efac; }
-    .btn { padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid transparent; }
-    .btn-sm { font-size: 11px; padding: 3px 8px; margin-right: 4px; }
+    .btn { padding: 5px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: opacity 0.15s; }
+    .btn-sm { font-size: 11px; padding: 4px 10px; margin-right: 4px; }
     .btn-outline { background: #1f2937; color: #e2e8f0; border-color: #374151; }
     .btn-outline:hover { background: #374151; }
     .btn-danger { background: #991b1b; color: #fef2f2; }
@@ -173,16 +175,30 @@ export class DashboardRenderer {
     .chart-box { background: #111827; border: 1px solid #1f2937; border-radius: 8px; padding: 20px; }
     .chart-row { display: flex; align-items: center; margin-bottom: 12px; gap: 12px; }
     .chart-label { width: 220px; font-size: 13px; font-weight: 500; color: #cbd5e1; }
-    .chart-bar-container { flex: 1; background: #1f2937; height: 16px; border-radius: 4px; overflow: hidden; }
-    .chart-bar { background: linear-gradient(90deg, #38bdf8, #818cf8); height: 100%; border-radius: 4px; }
-    .chart-val { width: 40px; text-align: right; font-size: 13px; font-weight: 700; color: #38bdf8; }
+    .chart-bar-container { flex: 1; background: #1f2937; height: 18px; border-radius: 4px; overflow: hidden; }
+    .chart-bar { background: linear-gradient(90deg, #38bdf8, #818cf8); height: 100%; border-radius: 4px; transition: width 0.3s; }
+    .chart-val { width: 44px; text-align: right; font-size: 13px; font-weight: 700; color: #38bdf8; }
     .review-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
     .review-card { background: #111827; border: 1px solid #1f2937; border-radius: 8px; padding: 14px; }
-    .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 8px; }
     .review-title { font-size: 14px; font-weight: 600; color: #f8fafc; margin-bottom: 4px; }
-    .review-content { font-size: 13px; color: #94a3b8; line-height: 1.4; }
+    .review-content { font-size: 13px; color: #94a3b8; line-height: 1.45; }
     .review-meta { font-size: 11px; color: #64748b; margin-top: 8px; }
-    .footer { margin-top: 24px; font-size: 12px; color: #64748b; text-align: center; }
+    .footer { margin-top: 32px; font-size: 12px; color: #64748b; text-align: center; border-top: 1px solid #1e293b; padding-top: 16px; }
+
+    /* Responsive Adaptation */
+    @media (max-width: 768px) {
+      body { padding: 16px 12px; }
+      .header { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .metrics { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .card { padding: 12px; }
+      .card-val { font-size: 22px; }
+      .chart-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+      .chart-label { width: 100%; }
+      .chart-bar-container { width: 100%; }
+      .chart-val { width: 100%; text-align: left; }
+      .review-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -272,9 +288,19 @@ export class DashboardRenderer {
     function switchTab(name) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      event.target.classList.add('active');
-      document.getElementById('tab-' + name).classList.add('active');
+      const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick')?.includes("'" + name + "'"));
+      if (activeBtn) activeBtn.classList.add('active');
+      const target = document.getElementById('tab-' + name);
+      if (target) target.classList.add('active');
     }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get('tab') || window.location.hash.replace('#', '');
+      if (tab && document.getElementById('tab-' + tab)) {
+        switchTab(tab);
+      }
+    });
 
     async function handleAction(incidentId, action) {
       try {
