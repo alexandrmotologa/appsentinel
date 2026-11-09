@@ -75,7 +75,7 @@ export class ReplayRunner {
             alertsTriggered++;
             incidentStore.recordAlertDispatched(
               evalResult.incidentRecord.id,
-              'mock',
+              'replay_simulation',
               'sent',
               {}
             );

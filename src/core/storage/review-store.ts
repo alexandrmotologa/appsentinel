@@ -192,6 +192,26 @@ export class ReviewStore {
     }));
   }
 
+  public calculateHistoricalHourlyRate(appId: string, days: number = 7): number {
+    const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+    const row = this.db
+      .prepare(`
+        SELECT COUNT(*) as count, MIN(review_date) as oldestDate
+        FROM reviews
+        WHERE app_id = ? AND review_date >= ? AND rating <= 2
+      `)
+      .get(appId, cutoff) as { count: number; oldestDate: string | null } | undefined;
+
+    if (!row || !row.count || !row.oldestDate) {
+      return 0.5; // Default minimal floor for cold start
+    }
+
+    const elapsedMs = Date.now() - new Date(row.oldestDate).getTime();
+    const elapsedHours = Math.max(1, elapsedMs / (60 * 60 * 1000));
+    const rate = row.count / elapsedHours;
+    return Math.max(0.2, Number(rate.toFixed(2)));
+  }
+
   public pruneReviewsOlderThan(days: number): number {
     const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
     const result = this.db

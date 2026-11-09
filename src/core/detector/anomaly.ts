@@ -70,8 +70,7 @@ export class SpikeDetector {
   }
 
   private calculateBaselineHourlyRate(appId: string): number {
-    // Default baseline floor for cold starts
-    return 0.5;
+    return this.reviewStore.calculateHistoricalHourlyRate(appId);
   }
 
   private meetsSeverityThreshold(severity: IncidentSeverity, minSeverity: IncidentSeverity): boolean {
