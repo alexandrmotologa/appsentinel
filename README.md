@@ -5,6 +5,11 @@
 <h1 align="center">AppSentinel</h1>
 
 <p align="center">
+  <a href="https://github.com/alexandrmotologa/appsentinel/actions/workflows/ci.yml"><img src="https://github.com/alexandrmotologa/appsentinel/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <a href="https://github.com/alexandrmotologa/appsentinel/releases"><img src="https://img.shields.io/badge/version-v1.0.0-6366f1.svg?style=flat-square" alt="Version" /></a>
+</p>
+
+<p align="center">
   <strong>Real-time mobile app review triage, hardware extraction, and crash spike monitoring for App Store and Google Play</strong>
 </p>
 

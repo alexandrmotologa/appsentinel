@@ -17,11 +17,22 @@ const program = new Command();
 program
   .name('appsentinel')
   .description('Real-time mobile app review triage, incident alerting, and rollout safety engine')
-  .version('1.0.0');
+  .version('1.0.0', '-v, --version')
+  .option('-V', 'output the version number', () => {
+    console.log('1.0.0');
+    process.exit(0);
+  });
+
+program
+  .command('version')
+  .description('Display version information')
+  .action(() => {
+    console.log(`appsentinel v${program.version()}`);
+  });
 
 // Global Options
 program.option('-c, --config <path>', 'Path to JSON configuration file');
-program.option('-v, --verbose', 'Enable verbose logging');
+program.option('--verbose', 'Enable verbose logging');
 
 // Command: search
 program
